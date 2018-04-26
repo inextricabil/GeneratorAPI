@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using GeneratorAPI.BusinessLayer.Publications;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Terminator.BusinessLayer.Publications;
 
 namespace GeneratorAPI.Controllers
@@ -12,29 +9,46 @@ namespace GeneratorAPI.Controllers
     [Route("api/publications")]
     public class PublicationsController : Controller
     {
+
+        private const string Path = @"c:\temp\Publications.txt";
+
+
         // GET:  api/publications/{numberOfMessages}
         [HttpGet("{numberOfMessages}")]
-        public JObject GetPublicationsByNumberOfMessages(int numberOfMessages)
+        public string GetPublicationsByNumberOfMessages(int numberOfMessages)
         {
             var publicationsConfiguration = new PublicationConfiguration();
             var generator = new PublicationGenerator();
 
-            return ConvertPublicationsListToJOBject(generator.Generate(publicationsConfiguration, numberOfMessages));
+            return ConvertPublicationsListToString(generator.Generate(publicationsConfiguration, numberOfMessages));
         }
 
         // GET:  api/publications
         [HttpGet]
-        public JObject GetPublications()
+        public string GetPublications()
         {
             var publicationsConfiguration = new PublicationConfiguration();
             var generator = new PublicationGenerator();
 
-            return ConvertPublicationsListToJOBject(generator.Generate(publicationsConfiguration, 1000));
+            return ConvertPublicationsListToString(generator.Generate(publicationsConfiguration, 10000));
         }
 
-        private static JObject ConvertPublicationsListToJOBject(List<Publication> publications)
+        //{(company,"Google");(value,90.0);(drop,10.0);(variation,0.73);(date,2.02.2022)} 
+        private static string ConvertPublicationsListToString(IEnumerable<Publication> publications)
         {
-            throw new NotImplementedException();
+            var result = string.Empty;
+            foreach (var publication in publications)
+            {
+                result += "{(company," + publication.CompanyName +");(value," + publication.Value + ");(drop," + publication.Drop +
+                    ");(variation," + publication.Variation + "),(date," + publication.Date.ToString("d.MM.yyyy") + "})}" + System.Environment.NewLine;
+            }
+
+            if (!System.IO.File.Exists(Path))
+            {
+                System.IO.File.WriteAllText(Path, result);
+            }
+
+            return result;
         }
     }
 }
