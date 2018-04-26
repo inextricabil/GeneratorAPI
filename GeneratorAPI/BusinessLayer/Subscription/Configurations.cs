@@ -1,42 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Terminator.BusinessLayer.Subscription
+namespace GeneratorAPI.BusinessLayer.Subscription
 {
     public class SubscriptionConfiguration
     {
 
-      public int NoOfMessages { get; set; } = 30000;
+      public int NumberOfMessages { get; set; } = 10000;
 
-        public List<string> Names { get; set; } = new List<string>()
+        public List<string> CompaniesList { get; set; } = new List<string>
         {
-            "Iasi", "Piatra Neamt", "Bacau", "Roman", "Suceava", "Vaslui", "Husi", "Botosani"
+            "Google", "Apple", "Microsoft", "Amazon", "HP"
         };
 
-        public List<string> Countries { get; set; } = new List<string>()
+        public List<DateTime> DatesList { get; set; } = GetRandomDateTimeList(10);
+        
+        public double ValueMin { get; set; } = 0;
+        public double ValueMax { get; set; } = 100;
+
+        public double DropMin { get; set; } = 0;
+        public double DropMax { get; set; } = 100;
+
+        public double VariationMin { get; set; } = 0;
+        public double VariationMax { get; set; } = 100;
+
+        private static List<DateTime> GetRandomDateTimeList(int numberOfDates)
         {
-            "Romania", "Moldova"
-        };
+            var random = new Random();
 
-        public double TemperatureMin { get; set; } = -25;
-        public double TemperatureMax { get; set; } = 45;
+            var dateTimes = new List<DateTime>();
+            for (var i = 0; i < numberOfDates; i++)
+            {
+                var start = new DateTime(1995, 1, 1);
+                var range = (DateTime.Today - start).Days;
+                dateTimes.Add(start.AddDays(random.Next(range)));
+            }
+            return dateTimes;
+        }
 
-        public int PrecipitationMin { get; set; } = 0;
-        public int PrecipitationMax { get; set; } = 100;
-        public int PrecipitationFrequency { get; set; } = 90;
-
-        public int PressureMin { get; set; } = 0;
-        public int PressureMax { get; set; } = 2000;
-        public int PresureFrequency { get; set; } = 85;
-
-        public double WindSpeedMin { get; set; } = 0;
-        public double WindSpeedMax { get; set; } = 100;
-        public int WindSpeedFrequency { get; set; } = 90;
-
-        public double LatMin { get; set; } = -90;
-        public double LatMax { get; set; } = 90;
-
-        public double LongMin { get; set; } = -180;
-        public double LongMax { get; set; } = 180;
     }
 }

@@ -1,23 +1,17 @@
-﻿
+﻿using System;
 
-namespace Terminator.BusinessLayer.Publications
+namespace GeneratorAPI.BusinessLayer.Publications
 {
     public class Publication
     {
-        public string  Name  { get; set; }
+        public string CompanyName  { get; set; }
 
-        public double Temperature { get; set; }
+        public double Value { get; set; }
 
-        public double Precipitation { get; set; }
+        public double Drop { get; set; }
 
-        public int Pressure { get; set; }
+        public double Variation { get; set; }
 
-        public double WindSpeed { get; set; }
-
-        public string Country { get; set; }
-
-        public double Latitude { get; set; }
-
-        public double Longitude { get; set; }
+        public DateTime Date { get; set; }
     }
 }

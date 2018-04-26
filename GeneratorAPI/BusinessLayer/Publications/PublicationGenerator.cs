@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GeneratorAPI.BusinessLayer.Publications;
 
 namespace Terminator.BusinessLayer.Publications
 {
@@ -16,32 +17,22 @@ namespace Terminator.BusinessLayer.Publications
             {
                 var publication = new Publication
                 {
-                    Name = publicationConfiguration.Names[_rnd.Next(publicationConfiguration.Names.Count)],
-                    Country = publicationConfiguration.Names[_rnd.Next(publicationConfiguration.Countries.Count)],
-                    Temperature = Random(publicationConfiguration.TemperatureMin, publicationConfiguration.TemperatureMax),
-                    Precipitation = Random(publicationConfiguration.PrecipitationMin, publicationConfiguration.PrecipitationMax),
-                    Pressure = Random(publicationConfiguration.PressureMin, publicationConfiguration.PressureMax),
-                    WindSpeed = Random(publicationConfiguration.WindSpeedMin, publicationConfiguration.WindSpeedMax),
-                    Latitude = Random(publicationConfiguration.LatMin, publicationConfiguration.LatMax),
-                    Longitude = Random(publicationConfiguration.LongMin, publicationConfiguration.LongMax),
+                    CompanyName = publicationConfiguration.CompaniesList[_rnd.Next(publicationConfiguration.DatesList.Count)],
+                    Date = publicationConfiguration.DatesList[_rnd.Next(publicationConfiguration.DatesList.Count)],
+                    Value = GetRandomInRange(publicationConfiguration.ValueMin, publicationConfiguration.ValueMax),
+                    Drop = GetRandomInRange(publicationConfiguration.DropMin, publicationConfiguration.DropMax),
+                    Variation = GetRandomInRange(publicationConfiguration.VariationMin, publicationConfiguration.VariationMax)
                 };
-
 
                 _publications.Add(publication);
             }
 
-
             return _publications;
         }
-    
-        private  double Random(double min, double max)
+
+        private double GetRandomInRange(double min, double max)
         {
             return Math.Round(_rnd.NextDouble() * (max - min) + min, 2);
-        }
-
-        private  int Random(int min, int max)
-        {
-            return _rnd.Next(min, max);
         }
 
     }

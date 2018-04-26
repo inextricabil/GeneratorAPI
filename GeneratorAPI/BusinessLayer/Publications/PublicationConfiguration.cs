@@ -1,35 +1,44 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-namespace Terminator.BusinessLayer.Publications
+namespace GeneratorAPI.BusinessLayer.Publications
 {
     public class PublicationConfiguration
     {
-        public List<string> Names { get; set; }= new List<string>()
+
+        public List<string> CompaniesList { get; set; } = new List<string>
         {
-            "Iasi", "Piatra Neamt", "Bacau", "Roman", "Suceava", "Vaslui", "Husi", "Botosani"
+            "Google", "Apple", "Microsoft", "Amazon", "HP"
         };
 
-        public List<string> Countries { get; set; } = new List<string>()
+        public List<DateTime> DatesList { get; set; } = GetDateTimeList();
+
+        public double ValueMin { get; set; } = 0;
+        public double ValueMax { get; set; } = 100;
+
+        public double DropMin { get; set; } = 0;
+        public double DropMax { get; set; } = 100;
+
+        public double VariationMin { get; set; } = 0;
+        public double VariationMax { get; set; } = 100;
+
+        private static List<DateTime> GetDateTimeList()
         {
-            "Romania", "Moldova"
-        };
 
-        public double TemperatureMin { get; set; } = -25;
-        public double TemperatureMax { get; set; } = 45;
+            return new List<DateTime>
+            {
+                new DateTime(1990, 12, 5),
+                new DateTime(1994, 3, 10),
+                new DateTime(2001, 10, 10),
+                new DateTime(2003, 12, 12),
+                new DateTime(2008, 5, 10),
+                new DateTime(2010, 3, 3),
+                new DateTime(2014, 10, 10),
+                new DateTime(2015, 6, 6),
+                new DateTime(2016, 3,12),
+                new DateTime(2018, 4, 26)
+            };
+        }
 
-        public int PrecipitationMin { get; set; } = 0;
-        public int PrecipitationMax { get; set; } = 100;
-
-        public int PressureMin { get; set; } = 0;
-        public int PressureMax { get; set; } = 2000;
-
-        public double WindSpeedMin { get; set; } = 0;
-        public double WindSpeedMax { get; set; } = 100;
-
-        public double LatMin { get; set; } = -90;
-        public double LatMax { get; set; } = 90;
-
-        public double LongMin { get; set; } = -180;
-        public double LongMax { get; set; } = 180;
     }
 }

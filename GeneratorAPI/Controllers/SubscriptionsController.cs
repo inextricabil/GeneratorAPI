@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Web.Http;
+using GeneratorAPI.BusinessLayer.Subscription;
+using Microsoft.AspNetCore.Mvc;
 using Terminator.BusinessLayer.Subscription;
 
-namespace Terminator.Controllers
+namespace GeneratorAPI.Controllers
 {
-    public class SubscriptionsController : ApiController
+    public class SubscriptionsController : Controller
     {
         [HttpGet]
         public List<Subscription> Index()

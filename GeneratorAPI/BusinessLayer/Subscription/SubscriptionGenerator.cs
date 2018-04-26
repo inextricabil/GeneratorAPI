@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GeneratorAPI.BusinessLayer.Subscription;
 
 namespace Terminator.BusinessLayer.Subscription
 {
@@ -28,7 +29,7 @@ namespace Terminator.BusinessLayer.Subscription
                     {
                         Field = "name",
                         Op = stringOperator,
-                        Value = subscriptionConfiguration.Names[_rnd.Next(subscriptionConfiguration.Names.Count)]
+                        Value = subscriptionConfiguration.CompaniesList[_rnd.Next(subscriptionConfiguration.Names.Count)]
                     },
                     Country = new Option
                     {
@@ -125,14 +126,14 @@ namespace Terminator.BusinessLayer.Subscription
             _maxNulls = new NumberOfNulls
             {
                 Precipitation =
-                    subscriptionConfiguration.NoOfMessages -
-                    subscriptionConfiguration.NoOfMessages * subscriptionConfiguration.PrecipitationFrequency / 100,
+                    subscriptionConfiguration.NumberOfMessages -
+                    subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.PrecipitationFrequency / 100,
                 Pressure =
-                    subscriptionConfiguration.NoOfMessages -
-                    subscriptionConfiguration.NoOfMessages * subscriptionConfiguration.PresureFrequency / 100,
+                    subscriptionConfiguration.NumberOfMessages -
+                    subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.PresureFrequency / 100,
                 WindSpeed =
-                    subscriptionConfiguration.NoOfMessages -
-                    subscriptionConfiguration.NoOfMessages * subscriptionConfiguration.WindSpeedFrequency / 100
+                    subscriptionConfiguration.NumberOfMessages -
+                    subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.WindSpeedFrequency / 100
 
             };
             _actualNulls = new NumberOfNulls
