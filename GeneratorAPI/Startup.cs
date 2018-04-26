@@ -22,6 +22,7 @@ namespace GeneratorAPI
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.Formatting = Formatting.Indented;
+                    options.SerializerSettings.DateFormatString = "d.MM.yyyy";
                 });
         }
 

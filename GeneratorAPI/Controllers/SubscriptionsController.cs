@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using GeneratorAPI.BusinessLayer.Subscription;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GeneratorAPI.Controllers
 {
@@ -12,58 +13,29 @@ namespace GeneratorAPI.Controllers
     {
         // GET:  api/subscriptions/{numberOfMessages}
         [HttpGet("{numberOfMessages}")]
-        public string GetSubscriptionsByNumberOfMessages(int numberOfMessages)
+        public JObject GetSubscriptionsByNumberOfMessages(int numberOfMessages)
         {
             var publicationsConfiguration = new SubscriptionConfiguration();
             var generator = new SubscriptionGenerator();
 
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                Converters = new List<JsonConverter> { new SubscriptionConverter() },
-                DateFormatString = "d.MM.yyyy",
-                Formatting = Formatting.Indented
-        };
+            return ConvertSubscriptionsListToJOBject(generator.Generate(publicationsConfiguration, numberOfMessages));
 
-            var json = JsonConvert.SerializeObject(generator.Generate(publicationsConfiguration, numberOfMessages));
-
-            return json;
         }
 
         // GET:  api/subscriptions
         [HttpGet]
-        public string GetSubscriptions()
+        public JObject GetSubscriptions()
         {
             var subscriptionConfiguration = new SubscriptionConfiguration();
             var generator = new SubscriptionGenerator();
 
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                Converters = new List<JsonConverter> { new SubscriptionConverter() },
-                DateFormatString = "d.MM.yyyy",
-                Formatting = Formatting.Indented
-            };
-
-            var json = JsonConvert.SerializeObject(generator.Generate(subscriptionConfiguration, 100000));
-
-            return json;
+            return ConvertSubscriptionsListToJOBject(generator.Generate(subscriptionConfiguration, 100000));
         }
-    }
 
-    public class SubscriptionConverter : JsonConverter
-    {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        private static JObject ConvertSubscriptionsListToJOBject(List<Subscription> subscriptions)
         {
             throw new NotImplementedException();
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return typeof(object) == typeof(List<Subscription>);
-        }
     }
 }

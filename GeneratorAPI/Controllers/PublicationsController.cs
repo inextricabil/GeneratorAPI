@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GeneratorAPI.BusinessLayer.Publications;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Terminator.BusinessLayer.Publications;
 
 namespace GeneratorAPI.Controllers
@@ -12,56 +14,25 @@ namespace GeneratorAPI.Controllers
     {
         // GET:  api/publications/{numberOfMessages}
         [HttpGet("{numberOfMessages}")]
-        public string GetPublicationsByNumberOfMessages(int numberOfMessages)
+        public JObject GetPublicationsByNumberOfMessages(int numberOfMessages)
         {
             var publicationsConfiguration = new PublicationConfiguration();
             var generator = new PublicationGenerator();
 
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                Converters = new List<JsonConverter> { new PublicationConverter() },
-                DateFormatString = "d.MM.yyyy",
-                Formatting = Formatting.Indented
-            };
-
-            var json = JsonConvert.SerializeObject(generator.Generate(publicationsConfiguration, numberOfMessages));
-
-            return json;
+            return ConvertPublicationsListToJOBject(generator.Generate(publicationsConfiguration, numberOfMessages));
         }
-    
+
         // GET:  api/publications
         [HttpGet]
-        public string GetPublications()
+        public JObject GetPublications()
         {
             var publicationsConfiguration = new PublicationConfiguration();
             var generator = new PublicationGenerator();
 
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                Converters = new List<JsonConverter> { new PublicationConverter() },
-                DateFormatString = "d.MM.yyyy",
-                Formatting = Formatting.Indented
-            };
-
-            var json = JsonConvert.SerializeObject(generator.Generate(publicationsConfiguration, 1000));
-
-            return json;
-        }
-    }
-
-    public class PublicationConverter : JsonConverter
-    {
-        public override bool CanConvert(Type objectType)
-        {
-            return typeof(object) == typeof(List<Publication>);
+            return ConvertPublicationsListToJOBject(generator.Generate(publicationsConfiguration, 1000));
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        private static JObject ConvertPublicationsListToJOBject(List<Publication> publications)
         {
             throw new NotImplementedException();
         }
