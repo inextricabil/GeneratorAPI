@@ -1,84 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
-using GeneratorAPI.BusinessLayer.Subscription;
+using System.Globalization;
 
-namespace Terminator.BusinessLayer.Subscription
+namespace GeneratorAPI.BusinessLayer.Subscription
 {
     public class SubscriptionGenerator
     {
         private List<Subscription> _subscriptions;
-        private readonly Random _rnd = new Random();
-        private NumberOfNulls _maxNulls;
-        private NumberOfNulls _actualNulls;
 
+        private static List<string> _operators { get; set; }
+
+        private NumberOfNulls _maxNulls { get; set; }
+        private NumberOfNulls _currentNulls { get; set; }
+
+        private static readonly Random _rnd = new Random();
+
+        public SubscriptionGenerator()
+        {
+            _operators = new List<string> {"=", "<", "<=", ">", ">="};
+
+        }
+
+        private const string stringOperator = "=";
 
         public List<Subscription> Generate(SubscriptionConfiguration subscriptionConfiguration, int noOfMessages)
         {
-
-            var operators = new List<string> { "=", "<", "<=", ">", ">=" };
-            const string stringOperator = "=";
-
-
             CalculatePosibleNumbersOfNulls(subscriptionConfiguration);
             _subscriptions = new List<Subscription>();
+
             for (var i = 0; i < noOfMessages; i++)
             {
                 var subscription = new Subscription
                 {
-                    Name = new Option
+                    CompanyName = new Option
                     {
-                        Field = "name",
+                        Field = "CompanyName",
                         Op = stringOperator,
-                        Value = subscriptionConfiguration.CompaniesList[_rnd.Next(subscriptionConfiguration.Names.Count)]
+                        Value = subscriptionConfiguration.CompaniesList[_rnd.Next(subscriptionConfiguration.CompaniesList.Count)]
                     },
-                    Country = new Option
+                    Value = new Option
                     {
-                        Field = "country",
-                        Op = stringOperator,
-                        Value = subscriptionConfiguration.Names[_rnd.Next(subscriptionConfiguration.Countries.Count)]
+                        Field = "Value",
+                        Op = _operators[_rnd.Next(_operators.Count)],
+                        Value = GenerateValueDoubleFromRange("Value", subscriptionConfiguration.ValueMin,
+                            subscriptionConfiguration.ValueMax).ToString()
                     },
-                    Temperature = new Option
+                    Drop = new Option
                     {
-                        Field = "temperature",
-                        Op = operators[_rnd.Next(operators.Count)],
-                        Value =
-                        Random(subscriptionConfiguration.TemperatureMin, subscriptionConfiguration.TemperatureMax).ToString()
+                        Field = "Drop",
+                        Op = _operators[_rnd.Next(_operators.Count)],
+                        Value = GenerateValueDoubleFromRange("Drop", subscriptionConfiguration.DropMin,
+                            subscriptionConfiguration.DropMax).ToString()
                     },
-                    Latitude = new Option
+                    Variation = new Option
                     {
-                        Field = "latitude",
-                        Op = operators[_rnd.Next(operators.Count)],
-                        Value = Random(subscriptionConfiguration.LatMin, subscriptionConfiguration.LatMax).ToString()
+                        Field = "Variation",
+                        Op = _operators[_rnd.Next(_operators.Count)],
+                        Value = GenerateValueDoubleFromRange("Variation", subscriptionConfiguration.ValueMin,
+                            subscriptionConfiguration.VariationMax).ToString()
                     },
-                    Longitude = new Option
+                    Date = new Option
                     {
-                        Field = "longitude",
-                        Op = operators[_rnd.Next(operators.Count)],
-                        Value = Random(subscriptionConfiguration.LongMin, subscriptionConfiguration.LongMax).ToString()
-                    },
-                    Precipitation = new Option
-                    {
-                        Field = "precipitation",
-                        Op = operators[_rnd.Next(operators.Count)],
-                        Value =
-                        GenerateValueDoubleFromRange("Precipitation", subscriptionConfiguration.PrecipitationMin,
-                            subscriptionConfiguration.PrecipitationMax).ToString()
-                    },
-                    WindSpeed = new Option
-                    {
-                        Field = "windspeed",
-                        Op = operators[_rnd.Next(operators.Count)],
-                        Value =
-                        GenerateValueDoubleFromRange("WindSpeed", subscriptionConfiguration.WindSpeedMin,
-                            subscriptionConfiguration.WindSpeedMax).ToString()
-                    },
-                    Pressure = new Option
-                    {
-                        Field = "pressure",
-                        Op = operators[_rnd.Next(operators.Count)],
-                        Value =
-                        GenerateValueIntFromRange("Pressure", subscriptionConfiguration.PressureMin,
-                            subscriptionConfiguration.PressureMax).ToString()
+                        Field = "Date",
+                        Op = _operators[_rnd.Next(_operators.Count)],
+                        Value = subscriptionConfiguration.DatesList[_rnd.Next(subscriptionConfiguration.DatesList.Count)].ToString("d.MM.yyyy")
                     },
                 };
 
@@ -89,34 +74,18 @@ namespace Terminator.BusinessLayer.Subscription
             return _subscriptions;
         }
 
-
-        private int? GenerateValueIntFromRange(string propertyName, int min, int max)
-        {
-            var actualNullValue = (int)_actualNulls.GetType().GetProperty(propertyName).GetValue(_actualNulls);
-            var maxNullValue = (int)_maxNulls.GetType().GetProperty(propertyName).GetValue(_maxNulls);
-
-            if (actualNullValue >= maxNullValue)
-                return RandomHearthRate(min, max);
-
-            if (_rnd.Next(0, 2) == 0)
-                return RandomHearthRate(min, max);
-
-            _actualNulls.GetType().GetProperty(propertyName).SetValue(_actualNulls, actualNullValue + 1);
-            return null;
-        }
-
         private double? GenerateValueDoubleFromRange(string propertyName, double min, double max)
         {
-            var actualNullValue = (int)_actualNulls.GetType().GetProperty(propertyName).GetValue(_actualNulls);
+            var actualNullValue = (int)_currentNulls.GetType().GetProperty(propertyName).GetValue(_currentNulls);
             var maxNullValue = (int)_maxNulls.GetType().GetProperty(propertyName).GetValue(_maxNulls);
 
             if (actualNullValue >= maxNullValue)
-                return RandomHeight(min, max);
+                return RandomDouble(min, max);
 
             if (_rnd.Next(0, 2) == 0)
-                return RandomHeight(min, max);
+                return RandomDouble(min, max);
 
-            _actualNulls.GetType().GetProperty(propertyName).SetValue(_actualNulls, actualNullValue + 1);
+            _currentNulls.GetType().GetProperty(propertyName).SetValue(_currentNulls, actualNullValue + 1);
             return null;
         }
 
@@ -125,46 +94,36 @@ namespace Terminator.BusinessLayer.Subscription
         {
             _maxNulls = new NumberOfNulls
             {
-                Precipitation =
+                CompanyName = 
                     subscriptionConfiguration.NumberOfMessages -
-                    subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.PrecipitationFrequency / 100,
-                Pressure =
+                    subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.CompanyNameFrequency / 100,
+                Value = 
                     subscriptionConfiguration.NumberOfMessages -
-                    subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.PresureFrequency / 100,
-                WindSpeed =
+                    subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.ValueFrequency / 100,
+                Drop = 
                     subscriptionConfiguration.NumberOfMessages -
-                    subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.WindSpeedFrequency / 100
+                    subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.DropFrequency / 100,
+                Variation = subscriptionConfiguration.NumberOfMessages -
+                            subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.VariationFrequency / 100,
+                Date = subscriptionConfiguration.NumberOfMessages -
+                    subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.DateFrequency / 100,
 
             };
-            _actualNulls = new NumberOfNulls
+
+            _currentNulls = new NumberOfNulls
             {
-                Precipitation = 0,
-                Pressure = 0,
-                WindSpeed = 0
+                CompanyName = 0,
+                Drop = 0,
+                Variation = 0,
+                Date = 0,
+                Value = 0
             };
         }
 
 
-        private double RandomHeight(double minHearthRate, double maxHearthRate)
-        {
-            return Math.Round(_rnd.NextDouble() * (maxHearthRate - minHearthRate) + minHearthRate, 2);
-        }
-
-        private int RandomHearthRate(int minHearthRate, int maxHearthRate)
-        {
-            return _rnd.Next(minHearthRate, maxHearthRate);
-        }
-
-
-
-        private double Random(double min, double max)
+        private static double RandomDouble(double min, double max)
         {
             return Math.Round(_rnd.NextDouble() * (max - min) + min, 2);
-        }
-
-        private int Random(int min, int max)
-        {
-            return _rnd.Next(min, max);
         }
     }
 }

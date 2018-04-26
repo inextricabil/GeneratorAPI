@@ -17,7 +17,7 @@ namespace Terminator.BusinessLayer.Publications
             {
                 var publication = new Publication
                 {
-                    CompanyName = publicationConfiguration.CompaniesList[_rnd.Next(publicationConfiguration.DatesList.Count)],
+                    CompanyName = publicationConfiguration.CompaniesList[_rnd.Next(publicationConfiguration.CompaniesList.Count)],
                     Date = publicationConfiguration.DatesList[_rnd.Next(publicationConfiguration.DatesList.Count)],
                     Value = GetRandomInRange(publicationConfiguration.ValueMin, publicationConfiguration.ValueMax),
                     Drop = GetRandomInRange(publicationConfiguration.DropMin, publicationConfiguration.DropMax),

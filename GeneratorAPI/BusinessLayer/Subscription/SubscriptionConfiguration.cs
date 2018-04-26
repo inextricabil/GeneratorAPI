@@ -24,6 +24,14 @@ namespace GeneratorAPI.BusinessLayer.Subscription
         public double VariationMin { get; set; } = 0;
         public double VariationMax { get; set; } = 100;
 
+        public int CompanyNameFrequency { get; set; } = 90;
+        public int ValueFrequency { get; set; } = 90;
+        public int DropFrequency { get; set; } = 90;
+        public int VariationFrequency { get; set; } = 90;
+        public int DateFrequency { get; set; } = 90;
+
+
+
         private static List<DateTime> GetRandomDateTimeList(int numberOfDates)
         {
             var random = new Random();

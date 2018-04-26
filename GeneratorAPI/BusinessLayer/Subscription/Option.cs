@@ -1,4 +1,4 @@
-﻿namespace Terminator.BusinessLayer.Subscription
+﻿namespace GeneratorAPI.BusinessLayer.Subscription
 {
     public class Option
     {
