@@ -86,12 +86,12 @@ namespace GeneratorAPI.BusinessLayer.Subscription
             }
             else
             {
-                var op = _operators[_rnd.Next(_operators.Count)];
-
-                if (op == _operators[0])
+                string op;
+                do
                 {
-                    _currentEquals.Date++;
+                    op = _operators[_rnd.Next(_operators.Count)];
                 }
+                while (op == _operators[0]);
                 return op;
             }
         }
