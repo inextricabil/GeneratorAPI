@@ -13,7 +13,7 @@ namespace GeneratorAPI.BusinessLayer.Subscription
             "Google", "Apple", "Microsoft", "Amazon", "HP"
         };
 
-        public List<DateTime> DatesList { get; set; } = GetRandomDateTimeList(10);
+        public List<DateTime> DatesList { get; set; } = GetRandomDateTimeList(3);
         
         public double ValueMin { get; set; } = 0;
         public double ValueMax { get; set; } = 100;
@@ -29,6 +29,8 @@ namespace GeneratorAPI.BusinessLayer.Subscription
         public int DropFrequency { get; set; } = 90;
         public int VariationFrequency { get; set; } = 90;
         public int DateFrequency { get; set; } = 90;
+
+        public int EqualFrequency { get; set; } = 90;
 
 
 

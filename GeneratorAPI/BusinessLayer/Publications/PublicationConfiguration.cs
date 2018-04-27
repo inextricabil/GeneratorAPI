@@ -29,14 +29,14 @@ namespace GeneratorAPI.BusinessLayer.Publications
             {
                 new DateTime(1990, 12, 5),
                 new DateTime(1994, 3, 10),
-                new DateTime(2001, 10, 10),
-                new DateTime(2003, 12, 12),
-                new DateTime(2008, 5, 10),
-                new DateTime(2010, 3, 3),
-                new DateTime(2014, 10, 10),
-                new DateTime(2015, 6, 6),
-                new DateTime(2016, 3,12),
-                new DateTime(2018, 4, 26)
+                new DateTime(2001, 10, 10)
+                //new DateTime(2003, 12, 12),
+                //new DateTime(2008, 5, 10),
+                //new DateTime(2010, 3, 3),
+                //new DateTime(2014, 10, 10),
+                //new DateTime(2015, 6, 6),
+                //new DateTime(2016, 3,12),
+                //new DateTime(2018, 4, 26)
             };
         }
 

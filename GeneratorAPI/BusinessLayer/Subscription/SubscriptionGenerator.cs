@@ -10,6 +10,8 @@ namespace GeneratorAPI.BusinessLayer.Subscription
 
         private static List<string> _operators { get; set; }
 
+        private NumberOfEquals _maxEquals { get; set; }
+        private NumberOfEquals _currentEquals { get; set; }
         private NumberOfNulls _maxNulls { get; set; }
         private NumberOfNulls _currentNulls { get; set; }
 
@@ -17,7 +19,7 @@ namespace GeneratorAPI.BusinessLayer.Subscription
 
         public SubscriptionGenerator()
         {
-            _operators = new List<string> {"=", "<", "<=", ">", ">="};
+            _operators = new List<string> { "=", "<", "<=", ">", ">=" };
 
         }
 
@@ -26,6 +28,7 @@ namespace GeneratorAPI.BusinessLayer.Subscription
         public List<Subscription> Generate(SubscriptionConfiguration subscriptionConfiguration, int noOfMessages)
         {
             CalculatePosibleNumbersOfNulls(subscriptionConfiguration);
+            CalculatePossibleNumberOfEquals(subscriptionConfiguration);
             _subscriptions = new List<Subscription>();
 
             for (var i = 0; i < noOfMessages; i++)
@@ -62,7 +65,7 @@ namespace GeneratorAPI.BusinessLayer.Subscription
                     Date = new Option
                     {
                         Field = "Date",
-                        Op = _operators[_rnd.Next(_operators.Count)],
+                        Op = GenerateEqualOperatorForDate(),
                         Value = subscriptionConfiguration.DatesList[_rnd.Next(subscriptionConfiguration.DatesList.Count)].ToString("d.MM.yyyy")
                     },
                 };
@@ -73,6 +76,40 @@ namespace GeneratorAPI.BusinessLayer.Subscription
 
             return _subscriptions;
         }
+
+        private string GenerateEqualOperatorForDate()
+        {
+            if (_currentEquals.Date <= _maxEquals.Date)
+            {
+                _currentEquals.Date++;
+                return _operators[0];
+            }
+            else
+            {
+                var op = _operators[_rnd.Next(_operators.Count)];
+
+                if (op == _operators[0])
+                {
+                    _currentEquals.Date++;
+                }
+                return op;
+            }
+        }
+
+        private void CalculatePossibleNumberOfEquals(SubscriptionConfiguration subscriptionConfiguration)
+        {
+            _maxEquals = new NumberOfEquals
+            {
+                Date = subscriptionConfiguration.NumberOfMessages -
+                    subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.EqualFrequency / 100,
+            };
+
+            _currentEquals = new NumberOfEquals
+            {
+                Date = 0
+            };
+        }
+
 
         private double? GenerateValueDoubleFromRange(string propertyName, double min, double max)
         {
@@ -94,13 +131,13 @@ namespace GeneratorAPI.BusinessLayer.Subscription
         {
             _maxNulls = new NumberOfNulls
             {
-                CompanyName = 
+                CompanyName =
                     subscriptionConfiguration.NumberOfMessages -
                     subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.CompanyNameFrequency / 100,
-                Value = 
+                Value =
                     subscriptionConfiguration.NumberOfMessages -
                     subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.ValueFrequency / 100,
-                Drop = 
+                Drop =
                     subscriptionConfiguration.NumberOfMessages -
                     subscriptionConfiguration.NumberOfMessages * subscriptionConfiguration.DropFrequency / 100,
                 Variation = subscriptionConfiguration.NumberOfMessages -
